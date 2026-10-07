@@ -60,3 +60,7 @@ __pycache__
 src/unit/.flags
 valkey-unit-tests
 src/.idea/*
+
+# Fork-only CLI help audit outputs
+src/valkey-cli.i
+/audit.json

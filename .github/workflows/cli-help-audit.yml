@@ -1,0 +1,51 @@
+name: Experimental CLI help audit
+
+on:
+  push:
+    branches: [experiment/cli-help-coverage]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: plain
+            tls: 'no'
+            rdma: 'no'
+          - name: tls
+            tls: 'yes'
+            rdma: 'no'
+          - name: tls-rdma
+            tls: 'yes'
+            rdma: 'yes'
+    name: CLI help (${{ matrix.name }})
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install build dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev librdmacm-dev libibverbs-dev
+      - name: Verify checker behavior
+        run: python3 -m unittest discover -s utils -p test_cli_help_audit.py
+      - name: Build CLI and matching parser inventory
+        run: |
+          make -j2 valkey-cli BUILD_TLS=${{ matrix.tls }} BUILD_RDMA=${{ matrix.rdma }} MALLOC=libc
+          make -C src valkey-cli.i BUILD_TLS=${{ matrix.tls }} BUILD_RDMA=${{ matrix.rdma }} MALLOC=libc
+      - name: Check public option visibility
+        run: python3 utils/cli_help_audit.py --source src/valkey-cli.i --binary src/valkey-cli --json audit.json
+      - name: Preserve findings in job summary
+        if: always()
+        run: |
+          if test -f audit.json; then
+            {
+              printf '```json\n'
+              cat audit.json
+              printf '```\n'
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Audit did not complete; no coverage claim.' >> "$GITHUB_STEP_SUMMARY"
+          fi

@@ -1,0 +1,17 @@
+{
+  "exceptions": {
+    "--slave": {"kind": "alias", "canonical": "--replica", "reason": "Legacy spelling accepted by the same parser branch."},
+    "--cluster-slave": {"kind": "alias", "canonical": "--cluster-replica", "reason": "Legacy spelling accepted by the same parser branch."},
+    "--cluster-master-id": {"kind": "alias", "canonical": "--cluster-primary-id", "reason": "Legacy spelling accepted by the same parser branch."},
+    "--cluster-only-masters": {"kind": "alias", "canonical": "--cluster-only-primaries", "reason": "Legacy spelling accepted by the same parser branch."},
+    "--cluster-use-empty-masters": {"kind": "alias", "canonical": "--cluster-use-empty-primaries", "reason": "Legacy spelling accepted by the same parser branch."},
+    "--cluster-fix-with-unreachable-masters": {"kind": "alias", "canonical": "--cluster-fix-with-unreachable-primaries", "reason": "Legacy spelling accepted by the same parser branch."},
+    "-v": {"kind": "alias", "canonical": "--version", "reason": "Short version alias; canonical long form has help."},
+    "--test_hint": {"kind": "internal", "reason": "Internal completion/hint testing path, not a user operation."},
+    "--test_hint_file": {"kind": "internal", "reason": "Internal completion/hint test driver used by tests/integration/valkey-cli.tcl."}
+  },
+  "required_sections": {
+    "--cluster-use-atomic-slot-migration": ["reshard", "rebalance"],
+    "--cluster-primary-id": ["add-node"]
+  }
+}

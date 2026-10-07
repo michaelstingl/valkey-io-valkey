@@ -802,6 +802,11 @@ $(LUA_MODULE_NAME): .make-prerequisites
 	$(MAKE) -C modules/lua OPTIMIZATION="$(OPTIMIZATION)" BUILD_LUA="$(BUILD_LUA)"
 
 # valkey-cli
+# Experimental audit input: use exactly the CLI compilation settings.
+.PHONY: valkey-cli.i
+valkey-cli.i: valkey-cli.c .make-prerequisites
+	$(QUIET_CC)$(CC) $(FINAL_CFLAGS) -E $< -o $@
+
 $(ENGINE_CLI_NAME): $(ENGINE_CLI_OBJ)
 	$(SERVER_LD) -o $@ $^ ../deps/libvalkey/lib/libvalkey.a ../deps/linenoise/linenoise.o ../deps/fpconv/libfpconv.a $(FINAL_LIBS) $(TLS_CLIENT_LIBS) $(RDMA_CLIENT_LIBS)
 
