@@ -1,5 +1,7 @@
 # CLI help coverage experiment
 
+The experiment lives in `michaelstingl/valkey-io-valkey`, branch `experiment/cli-help-coverage`. Baseline runs deliberately fail on the upstream omissions; later help-only corrections provide the positive control.
+
 This fork-only experiment asks how many supported CLI options are absent from help, and whether CI can catch the omissions. It is not an upstream-ready generic C analysis tool.
 
 Build the CLI and its preprocessed source with matching settings, then compare the parser inventory with the real executable's help:
