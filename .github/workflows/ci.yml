@@ -49,6 +49,10 @@ jobs:
         run: |
           sudo apt-get install pkg-config libzstd-dev libgtest-dev libgmock-dev
           make -j4 all-with-unit-tests SERVER_CFLAGS='-Werror' BUILD_TLS=yes BUILD_ZSTD=yes USE_LIBBACKTRACE=yes
+      - name: Check CLI help
+        run: |
+          python3 utils/test-check-cli-help.py
+          make check-cli-help
       - name: test
         run: |
           sudo apt-get install tcl8.6 tclx
@@ -170,6 +174,8 @@ jobs:
         run: |
           make distclean
           make -j4 BUILD_RDMA=yes USE_LIBBACKTRACE=yes
+      - name: Check CLI help
+        run: make check-cli-help
       - name: clone-rxe-kmod
         run: |
           uname -a
@@ -319,6 +325,8 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: make
         run: make -j4 SERVER_CFLAGS='-Werror' MALLOC=libc USE_LIBBACKTRACE=yes
+      - name: Check CLI help
+        run: make check-cli-help
 
   build-almalinux8-jemalloc:
     runs-on: ubuntu-latest

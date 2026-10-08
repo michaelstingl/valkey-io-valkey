@@ -858,6 +858,14 @@ test: $(ALL_BUILD_PREREQUISITES)
 test-unit:
 	@(cd unit && $(MAKE) test-unit)
 
+# Reuse the CLI build configuration for conditional options (TLS and RDMA).
+check-cli-help: $(ENGINE_CLI_NAME)
+	@set -e; source=$$(mktemp); trap 'rm -f "$$source"' EXIT; \
+	$(CC) $(FINAL_CFLAGS) -I. -E valkey-cli.c -o "$$source"; \
+	$(PYTHON) ../utils/check-cli-help.py --source "$$source" --binary ./$(ENGINE_CLI_NAME)
+
+.PHONY: check-cli-help
+
 # valkey-unit-gtests
 $(ENGINE_UNIT_GTESTS): $(ENGINE_LIB_NAME)
 	@(cd unit && $(MAKE) $(ENGINE_UNIT_GTESTS))
